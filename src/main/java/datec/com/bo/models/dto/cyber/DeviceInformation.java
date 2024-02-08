@@ -1,0 +1,11 @@
+
+package datec.com.bo.models.dto.cyber;
+
+import lombok.Data;
+
+@Data
+public class DeviceInformation {
+  
+  private String ipAddress;
+  private String hostName;
+}
