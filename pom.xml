@@ -9,7 +9,7 @@
         <relativePath /> <!-- lookup parent from repository -->
     </parent>
 	<groupId>datec.com.bo</groupId>
-	<artifactId>token.tarjeta.mastercard</artifactId>
+	<artifactId>token.tarjeta</artifactId>
 	<version>1.0.1</version>
 	<name>mastercard</name>
 	<description>Demo project for Spring Boot</description>

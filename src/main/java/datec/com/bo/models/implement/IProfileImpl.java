@@ -22,4 +22,10 @@ public class IProfileImpl implements
   @Transactional(readOnly = true)
   public Optional<AtcProfileEmpresa> buscarIdcyber(Long idcyber) { return profileDao.obtener(idcyber); }
   
+  @Override
+  @Transactional(readOnly = true)
+  public Optional<AtcProfileEmpresa> buscarIdprofile(Long idprofile) {
+    return profileDao.findById(idprofile);
+  }
+  
 }

@@ -16,6 +16,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import datec.com.bo.exceptions.ManualUnauthorizedException;
 import datec.com.bo.models.dao.ICertificadoAccesoDao;
 import datec.com.bo.models.dao.ICyberSouerceDao;
+import datec.com.bo.models.dao.ICyberSouerceDao.AuxilarDao;
 import datec.com.bo.models.dto.AccountUpdaterBatches;
 import datec.com.bo.models.dto.Included;
 import datec.com.bo.models.dto.Resp_Batches;
@@ -45,7 +46,6 @@ public class ICyberSourceImpl implements
   @Autowired
   private UtilsCyber utilsCyber;
   public static String gmtDateTime = "DATE_PLACEHOLDER";
-  public static String requestHost = "apitest.cybersource.com";
   public static String resource = "resource_PLACEHOLDER";
   public static String postRequestTarget = "REQUEST_TARGET_PALCEHOLDER";
   private final String USER_AGENT = "Mozilla/5.0";
@@ -60,10 +60,20 @@ public class ICyberSourceImpl implements
   
   @Override
   @Transactional(readOnly = true)
-  public Response batches(CyberSource cyber,
+  public List<AuxilarDao> listaPaymentToken(Long profile,
+                                            String codigo,
+                                            String tipo,
+                                            String fecha) {
+    return cyberDao.buscarPaymentToken(profile, codigo, tipo, fecha);
+  }
+  
+  @Override
+  @Transactional(readOnly = true)
+  public Response batches(List<AuxilarDao> paymentToken,
                           AtcProfileEmpresa profile) throws Exception {
     Response resp = new Response( );
     Long references = new Date( ).getTime( );
+    String requestHost = profile.getUrl( );
     Parametrica para = paraS.obtener("SERVICIO", "CYBERSOURCE", "BATCHES");
     resource = para.getGlosa( );
     log.info("=================================================");
@@ -74,10 +84,12 @@ public class ICyberSourceImpl implements
     log.info(buscar.getIdcertificado( ) + "");
     log.info("=================================================");
     AccountUpdaterBatches AUB = new AccountUpdaterBatches( );
-    Token T = new Token( );
-    T.setId(cyber.getPayment_token( ));
     List<Token> listaToken = new ArrayList<>( );
-    listaToken.add(T);
+    for(AuxilarDao _PayTok: paymentToken) {
+      Token T = new Token( );
+      T.setId(_PayTok.getPayment_token( ));
+      listaToken.add(T);
+    }
     Included I = new Included(listaToken);
     AUB.setType("oneOff");
     AUB.setMerchantReference(references.toString( ));
@@ -93,8 +105,8 @@ public class ICyberSourceImpl implements
     System.out.println("\n\nSample 1: POST call");
     System.out.println(resource + "\n" + merchantId + "\n" + merchantKeyId + "\n" + merchantsecretKey + "\n"
       + requestHost + "\n" + resource + "\n" + payload);
-    String respuesta = utilsCyber.sendPost(resource, merchantId, merchantKeyId, merchantsecretKey,
-      requestHost, resource, payload);
+    String respuesta = utilsCyber.sendPost("https://" + requestHost + resource, merchantId, merchantKeyId,
+      merchantsecretKey, requestHost, resource, payload);
     Resp_Batches cyber_resp = mapper.readValue(respuesta, Resp_Batches.class);
     resp.setData(cyber_resp);
     resp.setMessage("");
@@ -108,6 +120,7 @@ public class ICyberSourceImpl implements
                                 AtcProfileEmpresa profile) throws Exception {
     Response resp = new Response( );
     resource = url;
+    String requestHost = profile.getUrl( );
     log.info("=================================================");
     log.info(profile.getSessionId( ));
     CertificadoAcceso buscar = certificadoDao.findById(profile.getSessionId( ))
@@ -144,6 +157,7 @@ public class ICyberSourceImpl implements
                                 AtcProfileEmpresa profile) throws Exception {
     Response resp = new Response( );
     resource = url;
+    String requestHost = profile.getUrl( );
     log.info("=================================================");
     log.info(profile.getSessionId( ));
     CertificadoAcceso buscar = certificadoDao.findById(profile.getSessionId( ))

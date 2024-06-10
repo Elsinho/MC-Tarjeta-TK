@@ -8,4 +8,8 @@ import org.springframework.stereotype.Service;
 import datec.com.bo.models.entity.AtcProfileEmpresa;
 
 @Service
-public interface IProfileServ { public Optional<AtcProfileEmpresa> buscarIdcyber(Long idcyber); }
+public interface IProfileServ {
+  
+  public Optional<AtcProfileEmpresa> buscarIdcyber(Long idcyber);
+  public Optional<AtcProfileEmpresa> buscarIdprofile(Long idprofile);
+}

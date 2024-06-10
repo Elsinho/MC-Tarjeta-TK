@@ -86,7 +86,7 @@ public class UtilsCyber {
                          String payload) throws Exception {
     URL obj = new URL(url);
     StringBuffer response = new StringBuffer( );
-    String postRequestTarget = "post /accountupdater/v1/batches";
+    String postRequestTarget = "post " + resource;
     HttpURLConnection con = ( HttpURLConnection ) obj.openConnection( );
     con.setRequestProperty("v-c-merchant-id", merchantId);
     con.setRequestProperty("v-c-correlation-id", "123");

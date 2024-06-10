@@ -57,10 +57,10 @@ public class Empresas implements
   private Date fecha_baja;
   private String usuario_baja;
   private String estado;
-  @OneToMany(mappedBy = "idempresa")
+  @OneToMany(mappedBy = "idempresa", fetch = FetchType.EAGER)
   @JsonIgnoreProperties({"idempresa","iddeuda","idpersona","hibernateLazyInitializer","handler"})
   private List<Clientes> idcliente;
-  @OneToMany(mappedBy = "idpadre", fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+  @OneToMany(mappedBy = "idpadre", fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
   @JsonIgnoreProperties({"idpadre","hibernateLazyInitializer","handler"})
   private List<Empresas> hijo;
   @ManyToOne

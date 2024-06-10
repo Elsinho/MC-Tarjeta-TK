@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -35,7 +36,7 @@ public class AtcProfileEmpresa {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(unique = true, nullable = false)
-  private Integer idprofile;
+  private Long idprofile;
   @Column(name = "access_key", nullable = false, length = 255)
   private String accessKey;
   @Column(name = "dato_adicional1", length = 255)
@@ -73,7 +74,7 @@ public class AtcProfileEmpresa {
   private String tipo;
   @Column(name = "url")
   private String url;
-  @OneToMany(mappedBy = "atcProfileEmpresa")
+  @OneToMany(mappedBy = "atcProfileEmpresa", fetch = FetchType.EAGER)
   @JsonIgnoreProperties({"atcProfileEmpresa","hibernateLazyInitializer","handler"})
   private List<Empresas> empresas;
 }
